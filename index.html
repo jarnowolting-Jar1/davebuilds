@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Davebuilds — Kies een richting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: #0e0e0c;
+      color: #f2efe8;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    ::selection { background: #e8c547; color: #0e0e0c; }
+
+    .wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 48px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #26241f;
+      padding-bottom: 28px;
+      margin-bottom: 72px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-mark {
+      width: 16px;
+      height: 16px;
+      background: #e8c547;
+    }
+    .logo-name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .logo-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888277;
+    }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #888277;
+      border: 1px solid #26241f;
+      padding: 8px 14px;
+    }
+
+    .hero {
+      margin-bottom: 64px;
+    }
+    .hero-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #888277;
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: 72px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: #e8c547;
+      font-weight: 400;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid #26241f;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card:hover { border-color: #e8c547; }
+    .card:hover .card-arrow { color: #e8c547; }
+    .card:hover .card-preview { opacity: 1; }
+
+    .card--light { background: #f5f2ec; color: #111; }
+    .card--dark  { background: #0e0e0c; color: #f2efe8; }
+
+    .card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+    .card-title {
+      font-size: 48px;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin: 16px 0 12px;
+    }
+    .card-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      line-height: 1.6;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border: 1px solid currentColor;
+      opacity: 0.4;
+    }
+    .card-arrow {
+      font-size: 28px;
+      transition: color 0.2s;
+    }
+
+    .card-preview {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .card--light .card-preview {
+      background: repeating-linear-gradient(135deg, #e5e0d4 0 1px, #efeae0 1px 14px);
+    }
+    .card--dark .card-preview {
+      background: repeating-linear-gradient(135deg, #1a1a16 0 1px, #121210 1px 14px);
+    }
+
+    .card-content { position: relative; z-index: 1; }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid #26241f;
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #888277;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <div class="logo">
+        <div class="logo-mark"></div>
+        <span class="logo-name">Davebuilds</span>
+        <span class="logo-sub">Shopify studio · AMS</span>
+      </div>
+      <div class="badge">2 ontwerp-richtingen · Kies er één</div>
+    </header>
+
+    <div class="hero">
+      <div class="hero-label">Ontwerp-review · 2026</div>
+      <h1 class="hero-title">Kies een<br><em>richting</em>.</h1>
+    </div>
+
+    <div class="cards">
+      <a href="direction-a.html" class="card card--light">
+        <div class="card-preview"></div>
+        <div class="card-content">
+          <div class="card-label">Richting A · Swiss Light</div>
+          <div class="card-title">Licht &<br>Editoriaal</div>
+          <div class="card-desc">Off-white · 12-koloms grid<br>Ruim · Tijdschrift-stijl</div>
+        </div>
+        <div class="card-content card-bottom">
+          <span class="card-tag">Bekijk →</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <a href="direction-b.html" class="card card--dark">
+        <div class="card-preview"></div>
+        <div class="card-content">
+          <div class="card-label">Richting B · Swiss Dark</div>
+          <div class="card-title">Donker &<br>Technisch</div>
+          <div class="card-desc">Zwart · Ticker · Grid<br>Expressief · Technisch</div>
+        </div>
+        <div class="card-content card-bottom">
+          <span class="card-tag">Bekijk →</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+    </div>
+
+    <footer>
+      <span>© 2026 Davebuilds</span>
+      <span>Shopify studio · Amsterdam</span>
+      <span>Gemaakt in NL — 52.37°N / 4.89°E</span>
+    </footer>
+  </div>
+</body>
+</html>

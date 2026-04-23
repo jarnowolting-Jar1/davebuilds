@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Davebuilds — Shopify studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&family=GT+Sectra&family=Manrope:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; background: #0e0e0c; color: #f2efe8;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    * { box-sizing: border-box; }
+    ::selection { background: #d94f1e; color: #fff; }
+    em { font-style: italic; }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="shared/site-data.js"></script>
+  <script type="text/babel" src="shared/interactions.jsx"></script>
+  <script type="text/babel" src="directions/direction-a.jsx"></script>
+  <script type="text/babel" src="directions/direction-b.jsx"></script>
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accent": "#e8c547",
+      "fontPair": "helvetica"
+    }/*EDITMODE-END*/;
+
+    const FONT_PAIRS = {
+      'inter-jetbrains':    { display: "'Inter', sans-serif",         mono: "'JetBrains Mono', ui-monospace, monospace", label: 'Inter / JetBrains Mono' },
+      'grotesk-plex':       { display: "'Space Grotesk', sans-serif", mono: "'IBM Plex Mono', ui-monospace, monospace",  label: 'Space Grotesk / IBM Plex' },
+      'manrope-plex':       { display: "'Manrope', sans-serif",       mono: "'IBM Plex Mono', ui-monospace, monospace", label: 'Manrope / IBM Plex' },
+      'plex-plex':          { display: "'IBM Plex Sans', sans-serif", mono: "'IBM Plex Mono', ui-monospace, monospace", label: 'IBM Plex Sans / Mono' },
+      'helvetica':          { display: "'Helvetica Neue', Helvetica, Arial, sans-serif", mono: "'JetBrains Mono', monospace", label: 'Helvetica / JetBrains' },
+    };
+
+    const ACCENTS = [
+      { key: '#d94f1e', label: 'Ember' },
+      { key: '#c9ff3a', label: 'Acid' },
+      { key: '#2d4a2b', label: 'Pine' },
+      { key: '#1e4bd9', label: 'Klein' },
+      { key: '#e8c547', label: 'Mustard' },
+      { key: '#111111', label: 'Mono' },
+    ];
+
+    // Scrollable shell so each 1440×900 artboard contains the full homepage,
+    // scrolls internally on the canvas, and fills the screen in focus mode.
+    function ScrollShell({ children }) {
+      return (
+        <div style={{
+          width: '100%', height: '100%',
+          overflowY: 'auto', overflowX: 'hidden',
+          WebkitOverflowScrolling: 'touch',
+        }}>
+          {children}
+        </div>
+      );
+    }
+
+    function App() {
+      const [t, setT] = useTweaks(TWEAK_DEFAULTS);
+      const set = (obj) => Object.entries(obj).forEach(([k, v]) => setT(k, v));
+      const pair = FONT_PAIRS[t.fontPair] || FONT_PAIRS['inter-jetbrains'];
+
+      return (
+        <>
+          <DesignCanvas>
+            <DCSection id="home" title="Davebuilds" subtitle="Shopify studio — homepage · 2 richtingen naast elkaar">
+              <DCArtboard id="dir-a" label="A · Swiss Light — editorial en ruim" width={1440} height={900}>
+                <ScrollShell>
+                  <DirectionA accent={t.accent} fontDisplay={pair.display} fontMono={pair.mono} />
+                </ScrollShell>
+              </DCArtboard>
+              <DCArtboard id="dir-b" label="B · Swiss Dark — technisch en expressief" width={1440} height={900}>
+                <ScrollShell>
+                  <DirectionB accent={t.accent} fontDisplay={pair.display} fontMono={pair.mono} />
+                </ScrollShell>
+              </DCArtboard>
+            </DCSection>
+          </DesignCanvas>
+
+          <TweaksPanel title="Tweaks" initialX={24} initialY={24}>
+            <TweakSection title="Accent">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                {ACCENTS.map((a) => (
+                  <button
+                    key={a.key}
+                    onClick={() => set({ accent: a.key })}
+                    title={a.label}
+                    style={{
+                      padding: 8,
+                      border: t.accent === a.key ? '2px solid #111' : '1px solid #d9d3c6',
+                      background: '#fff', cursor: 'pointer',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+                      fontFamily: 'ui-monospace, monospace', fontSize: 10, letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    <span style={{ width: '100%', height: 24, background: a.key, border: '1px solid rgba(0,0,0,.1)' }} />
+                    {a.label}
+                  </button>
+                ))}
+              </div>
+              <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 11, color: '#666' }}>Custom</span>
+                <input
+                  type="color"
+                  value={t.accent}
+                  onChange={(e) => set({ accent: e.target.value })}
+                  style={{ width: '100%', height: 28, border: '1px solid #d9d3c6', background: '#fff', cursor: 'pointer' }}
+                />
+              </div>
+            </TweakSection>
+
+            <TweakSection title="Typografie">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {Object.entries(FONT_PAIRS).map(([k, v]) => (
+                  <button
+                    key={k}
+                    onClick={() => set({ fontPair: k })}
+                    style={{
+                      textAlign: 'left',
+                      padding: '8px 10px',
+                      border: t.fontPair === k ? '2px solid #111' : '1px solid #d9d3c6',
+                      background: t.fontPair === k ? '#f5f2ec' : '#fff',
+                      cursor: 'pointer',
+                      fontFamily: v.display,
+                      fontSize: 14,
+                    }}
+                  >
+                    <div style={{ fontWeight: 500 }}>{v.label}</div>
+                    <div style={{ fontFamily: v.mono, fontSize: 10, color: '#666', marginTop: 2, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                      {k}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </TweakSection>
+          </TweaksPanel>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
